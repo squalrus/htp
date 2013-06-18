@@ -3,7 +3,8 @@ var express      = require( 'express' )
     ,path        = require( 'path' )
     ,htp         = require( './htp/htp-foursquare' )
     ,foursquare  = require( 'node-foursquare' )( htp.foursquareOpt )
-    ,app         = express();
+    ,app         = express()
+    ;
 
 // Environment Settings
 app.set( 'port', process.env.PORT || 3000 );
@@ -14,11 +15,21 @@ app.set( 'view engine', 'ejs' );
 app.use( express.favicon() );
 app.use( express.bodyParser() );
 app.use( express.compress() );
+app.use( express.cookieParser() );
+app.use( express.cookieSession({ key: 'pid', secret: 'pissr' }) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
 // Routing
 app.get( '/', function( req, res ){
     res.render( 'index' );
+});
+
+app.get( '/list', function( req, res ){
+
+    // https://api.foursquare.com/v2/venues/explore
+
+
+    res.render( 'list' );
 });
 
 app.get( '/login', function( req, res ){
@@ -34,7 +45,13 @@ app.get( '/callback', function( req, res ){
             res.send( 'An error was thrown: ' + error.message );
         } else {
             // Save the accessToken and redirect
-            res.render( 'index' );
+            console.log( 'TOKEN: ' + accessToken );
+            console.log( 'CODE:  ' + req.query.code );
+
+            req.session.htp = {};
+            req.session.htp.token = accessToken;
+
+            res.redirect( '/list' );
         }
     });
 });

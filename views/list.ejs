@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>How's The Pisser</title>
+</head>
+<body>
+    <h1>You are in the pisser.</h1>
+
+    <script>
+        navigator.geolocation.getCurrentPosition( function( position ){
+            var   lat
+                , lon;
+
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+
+            console.log( 'Lat: ' + lat + ', Lon: ' + lon );
+        });
+    </script>
+</body>
+</html>
