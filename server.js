@@ -27,9 +27,15 @@ app.get( '/', function( req, res ){
 app.get( '/list', function( req, res ){
 
     // https://api.foursquare.com/v2/venues/explore
+    // ll
+    // oauth_token: req.session.token
 
+    foursquare.Venues.explore( 43.03890200000001, -87.906474, {}, req.session.token, function( error, result ){
+        console.log( result );
 
-    res.render( 'list' );
+        res.render( 'list', result );
+    });
+
 });
 
 app.get( '/login', function( req, res ){
@@ -48,8 +54,7 @@ app.get( '/callback', function( req, res ){
             console.log( 'TOKEN: ' + accessToken );
             console.log( 'CODE:  ' + req.query.code );
 
-            req.session.htp = {};
-            req.session.htp.token = accessToken;
+            req.session.token = accessToken;
 
             res.redirect( '/list' );
         }
