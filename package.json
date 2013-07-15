@@ -1,12 +1,11 @@
 {
     "name": "howsthepisser",
-    "subdomain": "htp",
     "domains": [
         "howsthepisser.com",
         "www.howsthepisser.com"
     ],
     "scripts": {
-        "start": "app.js"
+        "start": "node server.js"
     },
     "version": "0.0.1",
     "engines": {
@@ -16,6 +15,7 @@
         "express": "3.2.4",
         "ejs": "0.8.4",
         "node-foursquare": "0.2.0",
-        "mongoskin": "0.5.0"
+        "mongoskin": "0.5.0",
+        "azure": "0.7.11"
     }
 }

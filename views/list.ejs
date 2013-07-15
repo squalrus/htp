@@ -4,21 +4,38 @@
     <title>How's The Pisser</title>
 </head>
 <body>
-    <hgroup>
-        <h1>You are in the pisser.</h1>
-        <h3><%= headerFullLocation %></h3>
-    </hgroup>
+    <h1>You are in the pisser.</h1>
 
+    <ul id="venue-list">
+    </ul>
+
+    <script src="js/lib/jquery.min.js"></script>
     <script>
-        navigator.geolocation.getCurrentPosition( function( position ){
-            var   lat
-                , lon;
 
-            lat = position.coords.latitude;
-            lon = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition( geoSuccess, geoFailure );
 
-            console.log( 'Lat: ' + lat + ', Lon: ' + lon );
-        });
+        function geoSuccess( position ){
+            $.ajax({
+                type: 'GET'
+                ,url: '/venues'
+                ,data: {
+                    'lat': position.coords.latitude,
+                    'lon': position.coords.longitude
+                }
+            }).done( function( data ){
+                var items = data.groups[0].items
+                    i = 0;
+
+                for( ; i < items.length; i++ ){
+                    $( '#venue-list' ).append( '<li>' + items[i].venue.name + '</li>' );
+                }
+                console.log( 'successful request!!!' );
+            });
+        }
+
+        function geoFailure( err ){
+            console.log( err );
+        }
     </script>
 </body>
 </html>
