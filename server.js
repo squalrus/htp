@@ -1,19 +1,24 @@
-var   express       = require( 'express' )
-    , http          = require( 'http' )
-    , path          = require( 'path' )
-    , azure         = require( 'azure' )
-    , nconf         = require( 'nconf' )
-    , htp           = require( './htp/htp-foursquare' )
-    , foursquare    = require( 'node-foursquare' )( htp.foursquareOptions )
-    , app           = express()
+var  express       = require( 'express' )
+    ,http          = require( 'http' )
+    ,path          = require( 'path' )
+    ,azure         = require( 'azure' )
+    ,nconf         = require( 'nconf' )
+    ,htp           = require( './htp/htp-foursquare' )
+    ,foursquare    = require( 'node-foursquare' )( htp.foursquareOptions )
+    ,app           = express()
+    ;
+
+// Routing
+var  routes        = require( './routes' )
+     api           = require( './routes/api' )
     ;
 
 nconf.env().file({ file: 'config.json' });
 
-var   tableName     = nconf.get( 'TABLE_NAME' )
-    , partitionKey  = nconf.get( 'PARTITION_KEY' )
-    , accountName   = nconf.get( 'STORAGE_NAME' )
-    , accountKey    = nconf.get( 'STORAGE_KEY' )
+var  tableName     = nconf.get( 'TABLE_NAME' )
+    ,partitionKey  = nconf.get( 'PARTITION_KEY' )
+    ,accountName   = nconf.get( 'STORAGE_NAME' )
+    ,accountKey    = nconf.get( 'STORAGE_KEY' )
     ;
 
 // Environment Settings
@@ -30,14 +35,14 @@ app.use( express.cookieSession({ key: 'pid', secret: 'pissr' }) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
 // Routing
-var   RatingList    = require( './routes/rating' )
-    , Rating        = require( './models/rating' )
-    , rating        = new Rating(
-                          azure.createTableService( accountName, accountKey )
-                        , tableName
-                        , partitionKey
+var  RatingList    = require( './routes/rating' )
+    ,Rating        = require( './models/rating' )
+    ,rating        = new Rating(
+                         azure.createTableService( accountName, accountKey )
+                        ,tableName
+                        ,partitionKey
                       )
-    , ratingList    = new RatingList( rating )
+    ,ratingList    = new RatingList( rating )
     ;
 
 app.get( '/', ratingList.showRatings.bind( ratingList ) );
@@ -85,6 +90,21 @@ app.get( '/callback', function( req, res ){
         }
     });
 });
+
+/*
+ * Page Routing
+ * --------------------------------------------------------------- */
+
+/*
+ * API Routing
+ * --------------------------------------------------------------- */
+// Venues
+app.get( '/api/venue', api.venues );
+// Venue Details
+app.get( '/api/venue/:id', api.venue );
+// Rate Venue
+app.post( '/api/venue/:id', api.rate );
+
 
 // Create Server
 http.createServer( app ).listen( app.get( 'port' ), function( ){

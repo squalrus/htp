@@ -27,7 +27,7 @@
                     i = 0;
 
                 for( ; i < items.length; i++ ){
-                    $( '#venue-list' ).append( '<li>' + items[i].venue.name + '</li>' );
+                    $( '#venue-list' ).append( '<li>' + items[i].venue.name + ' // ' + items[i].venue.location.distance + '</li>' );
                 }
                 console.log( 'successful request!!!' );
             });
