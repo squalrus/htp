@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>How's The Pisser</title>
+</head>
+<body>
+    <h1>How's The Pisser</h1>
+
+    <h2>API</h2>
+
+    <p>/api/venue</p>
+    <div id="api-venue"></div>
+
+    <p>/api/venue/:id</p>
+    <div id="api-venue-id"></div>
+
+    <script src="js/lib/jquery.min.js"></script>
+    <script>
+        $.get('/api/venue', function( data ){
+            $('#api-venue').html(JSON.stringify(data));
+        });
+
+        $.get('/api/venue/123', function( data ){
+            $('#api-venue-id').html(JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>

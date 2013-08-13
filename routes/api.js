@@ -14,7 +14,7 @@ exports.venues = function( req, res ){
         ,'description': 'List venues close to user' })
     );
     res.end('\n');
-});
+}
 
 // Venue Details
 // @description: Venue details
@@ -28,7 +28,7 @@ exports.venue = function( req, res ){
         ,'description': 'Venue details' })
     );
     res.end('\n');
-});
+}
 
 // Rate Venue
 // @description: Rate a venue
@@ -42,4 +42,4 @@ exports.rate = function( req, res ){
         ,'description': 'Rate a venue' })
     );
     res.end('\n');
-});
+}

@@ -2,13 +2,15 @@
  * Routing
  * --------------------------------------------------------------- */
 
-app.get( '/', ratingList.showRatings.bind( ratingList ) );
+// Index
+// @description: Basic information
+exports.index = function( req, res ){
+    res.render('index');
+}
 
-app.get( '/list', function( req, res ){
-    res.render( 'list' );
-});
-
-app.get( '/venues', function( req, res ){
+// List
+// @description: List Venues
+exports.list = function( req, res ){
     foursquare.Venues.explore( req.query.lat, req.query.lon, {}, req.session.token, function( error, result ){
 
         console.log( result );
@@ -17,20 +19,18 @@ app.get( '/venues', function( req, res ){
         res.write( JSON.stringify( result ) );
         res.end('\n');
     });
-});
+}
 
-app.get( '/login', function( req, res ){
+// Login
+// @description: Login
+exports.login = function( req, res ){
     res.writeHead( 303, { 'location': foursquare.getAuthClientRedirectUrl() });
     res.end();
-});
+}
 
-app.get( '/insert', function( req, res ){
-    var tableService = azure.createTableService();
-
-    // tableService.queryEntity( 'pissers', )
-});
-
-app.get( '/callback', function( req, res ){
+// Callback
+// @description: Callback
+exports.callback = function( req, res ){
     foursquare.getAccessToken({
         code: req.query.code
     }, function( error, accessToken ){
@@ -46,4 +46,8 @@ app.get( '/callback', function( req, res ){
             res.redirect( '/list' );
         }
     });
-});
+}
+
+exports.test = function( req, res ){
+    res.render('test');
+}
