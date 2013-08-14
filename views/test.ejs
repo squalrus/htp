@@ -14,6 +14,9 @@
     <p>/api/venue/:id</p>
     <div id="api-venue-id"></div>
 
+    <p>/api/user/:id</p>
+    <div id="api-user-id"></div>
+
     <script src="js/lib/jquery.min.js"></script>
     <script>
         $.get('/api/venue', function( data ){
@@ -22,6 +25,10 @@
 
         $.get('/api/venue/123', function( data ){
             $('#api-venue-id').html(JSON.stringify(data));
+        });
+
+        $.get('/api/user/123', function( data ){
+            $('#api-user-id').html(JSON.stringify(data));
         });
     </script>
 </body>

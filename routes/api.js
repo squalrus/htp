@@ -43,3 +43,17 @@ exports.rate = function( req, res ){
     );
     res.end('\n');
 }
+
+// User Detail
+// @description: Rate a venue
+exports.user = function( req, res ){
+
+    // TODO: implement venue
+    res.writeHead( 200, { 'Content-Type': 'text/json' });
+    res.write( JSON.stringify({
+         'success': 1
+        ,'api': '/api/user/:id'
+        ,'description': 'User Details' })
+    );
+    res.end('\n');
+}

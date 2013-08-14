@@ -61,11 +61,13 @@ app.get( '/test', routes.test );
  * --------------------------------------------------------------- */
 // Venues
 app.get( '/api/venue', api.venues );
+
 // Venue Details
 app.get( '/api/venue/:id', api.venue );
-// Rate Venue
 app.post( '/api/venue/:id', api.rate );
 
+// User Details
+app.get( '/api/user/:id', api.user );
 
 // Create Server
 http.createServer( app ).listen( app.get( 'port' ), function( ){
