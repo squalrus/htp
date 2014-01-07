@@ -1,7 +1,7 @@
 /*
  * Routing
  * --------------------------------------------------------------- */
-(function() {
+(function () {
     'use strict';
 
     // Index
@@ -12,21 +12,21 @@
 
     // List
     // @description: List Venues
-    exports.list = function( req, res ){
-        foursquare.Venues.explore( req.query.lat, req.query.lon, {}, req.session.token, function( error, result ){
+    exports.list = function (req, res) {
+        foursquare.Venues.explore( req.query.lat, req.query.lon, {}, req.session.token, function (error, result) {
 
             console.log( result );
 
-            res.writeHead( 200, { 'Content-Type': 'text/json' });
-            res.write( JSON.stringify( result ) );
+            res.writeHead(200, { "Content-Type": "text/json" });
+            res.write(JSON.stringify(result));
             res.end('\n');
         });
     };
 
     // Login
     // @description: Login
-    exports.login = function( req, res ){
-        res.writeHead( 303, { 'location': foursquare.getAuthClientRedirectUrl() });
+    exports.login = function (req, res) {
+        res.writeHead(303, { "location": foursquare.getAuthClientRedirectUrl() });
         res.end();
     };
 

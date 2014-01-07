@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>How's The Pisser</title>
+</head>
+<body>
+    <h1>You are in the pisser.</h1>
+
+    <ul id="venue-list">
+    </ul>
+
+    <script src="/js/lib/jquery.min.js"></script>
+    <script>
+
+        navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
+
+        function updateVenues (data) {
+            var venues = data.groups[0].items,
+                i;
+
+            for (i = 0; i < venues.length; i++) {
+                $("#venue-list").append("<li data-id='" + venues[i].venue.id + "'><a href='/venues/" + venues[i].venue.id + "'>" + venues[i].venue.name + "</a> // " + venues[i].venue.location.distance + " meters</li>");
+            }
+
+            console.log("successful request!!!");
+        }
+
+        function geoSuccess (position) {
+            console.log("lat: " + position.coords.latitude);
+            console.log("lon: " + position.coords.longitude);
+
+            $.ajax({
+                type: 'GET',
+                url: '/api/venues',
+                data: {
+                    'lat': position.coords.latitude,
+                    'lon': position.coords.longitude
+                },
+                success: updateVenues
+            });
+        }
+
+        function geoFailure( err ){
+            console.log( err );
+        }
+    </script>
+</body>
+</html>

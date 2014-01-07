@@ -28,11 +28,10 @@ module.exports = function (grunt) {
 
         // jshint files/directories
         jshint: {
-            all: ["htp/*.js", "models/*.js","routes/*.js"],
+            all: ["server.js", "htp/*.js", "models/*.js","routes/*.js"],
             options: {
-                laxcomma: true,
                 eqeqeq: true,
-                quotmark: "single",
+                quotmark: "double",
                 unused: true,
                 strict: true,
                 trailing: true
