@@ -7,9 +7,23 @@
     <h1>Venue</h1>
 
     <ul id="venue">
-        <%= v.venue.name %>
+        <li><%= v.venue.name %></li>
+        <li><%= v.venue.location.address %></li>
+        <li><%= v.venue.location.city %></li>
+        <li><%= v.venue.location.state %></li>
+        <li><img src="" class="image" /></li>
+        <li>Here Now: <%= v.venue.hereNow.count %></li>
+        <li>Open: <%= v.venue.popular.isOpen %></li>
     </ul>
 
     <script src="/js/lib/jquery.min.js"></script>
+    <script>
+        var prefix  = "<%= v.venue.categories[0].icon.prefix %>";
+        var suffix  = "<%= v.venue.categories[0].icon.suffix %>";
+        var fullUrl = prefix.slice(0, prefix.length - 1) + suffix;
+
+
+        $(".image").attr("src", fullUrl);
+    </script>
 </body>
 </html>

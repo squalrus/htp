@@ -15,8 +15,8 @@ nconf.env().file({ file: "config.json" });
 
 var tableName     = nconf.get("TABLE_NAME"),
     partitionKey  = nconf.get("PARTITION_KEY"),
-    accountName   = nconf.get("STORAGE_NAME"),
-    accountKey    = nconf.get("STORAGE_KEY");
+    storageAccount      = nconf.get("AZURE_STORAGE_ACCOUNT"),
+    storageAccessKey    = nconf.get("AZURE_STORAGE_ACCESS_KEY");
 
 // Environment Settings
 app.set("port", process.env.PORT || 3000);
@@ -77,6 +77,38 @@ app.get("/venues/:id", function (req, res) {
         });
 
         response.on("end", function () {
+            // console.log(venueData);
+            res.render("venue", { v: JSON.parse(venueData) });
+        });
+
+    }).on("error", function (e) {
+        console.log("error: " + e.message);
+    });
+
+    var entity = {
+        PartitionKey: "me",
+        RowKey: req.param("id"),
+        Rating: 4
+    };
+
+    console.log(storageAccount);
+    console.log(storageAccessKey);
+
+    var tableService = azure.createTableService(storageAccount, storageAccessKey);
+    tableService.insertOrReplaceEntity("pissers", entity, function (error) {
+        console.log(error);
+    });
+});
+
+app.post("/venues/:id", function (req, res) {
+    http.get("http://localhost:3000/api/venues/" + req.param("id"), function (response) {
+        var venueData = "";
+
+        response.on("data", function (chunk) {
+            venueData += chunk;
+        });
+
+        response.on("end", function () {
             console.log(venueData);
             res.render("venue", { v: JSON.parse(venueData) });
         });
@@ -90,7 +122,7 @@ app.get("/venues/:id", function (req, res) {
 
 // Insert
 app.get("/insert", function (req, res) {
-    var tableService = azure.createTableService();
+    // var tableService = azure.createTableService();
 
     // tableService.queryEntity("pissers", )
 });
