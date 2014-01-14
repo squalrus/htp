@@ -45,6 +45,9 @@ app.get("/login", function (req, res) {
 
 // Callback
 app.get("/callback", function (req, res) {
+    // Turn on to debug /callback
+    var debug = false;
+
     foursquare.getAccessToken({
         code: req.query.code
     }, function (error, accessToken) {
@@ -52,23 +55,38 @@ app.get("/callback", function (req, res) {
             res.send("An error was thrown: " + error.message);
         } else {
             // Save the accessToken and redirect
-            console.log("TOKEN: " + accessToken);
-            console.log("CODE:  " + req.query.code);
-
             req.session.token = accessToken;
-
             res.redirect("/venues");
+
+            if (debug) {
+                console.log("GET: /callback");
+                console.log("accessToken: " + accessToken);
+                console.log("code:  " + req.query.code);
+                console.log("");
+            }
         }
     });
 });
 
 // Venues
 app.get("/venues", function (req, res) {
+    var debug = false;
+
     res.render("venues");
+
+    if (debug) {
+        console.log("GET: /venues");
+        console.log("");
+    }
 });
 
 // Venue
 app.get("/venues/:id", function (req, res) {
+    var debug = false;
+
+    if (debug) { console.log("GET: /venues/:id"); }
+
+    // Foursqare data
     http.get("http://localhost:3000/api/venues/" + req.param("id"), function (response) {
         var venueData = "";
 
@@ -77,68 +95,74 @@ app.get("/venues/:id", function (req, res) {
         });
 
         response.on("end", function () {
-            // console.log(venueData);
+            if (debug) { console.log("venueData: " + venueData); }
+
             res.render("venue", { v: JSON.parse(venueData) });
         });
 
-    }).on("error", function (e) {
-        console.log("error: " + e.message);
+    }).on("error", function (error) {
+        // Account for this
+        if (debug) { console.log("error: " + error.message); }
     });
 
+    if (debug) { console.log(""); }
+});
+
+// Venue
+app.post("/venues/:id", function (req, res) {
+    var debug = false;
+
+    if (debug) { console.log("POST: /venues/:id"); }
+
+    // Write the rating (move to POST method)
     var entity = {
         PartitionKey: "me",
         RowKey: req.param("id"),
         Rating: 4
     };
 
-    console.log(storageAccount);
-    console.log(storageAccessKey);
+    if (debug) {
+        console.log("storageAccount: " + storageAccount);
+        console.log("storageAccessKey: " + storageAccessKey);
+    }
 
     var tableService = azure.createTableService(storageAccount, storageAccessKey);
     tableService.insertOrReplaceEntity("pissers", entity, function (error) {
-        console.log(error);
-    });
-});
-
-app.post("/venues/:id", function (req, res) {
-    http.get("http://localhost:3000/api/venues/" + req.param("id"), function (response) {
-        var venueData = "";
-
-        response.on("data", function (chunk) {
-            venueData += chunk;
-        });
-
-        response.on("end", function () {
-            console.log(venueData);
-            res.render("venue", { v: JSON.parse(venueData) });
-        });
-
-    }).on("error", function (e) {
-        console.log("error: " + e.message);
+        if (!error) {
+            // Do something
+        }
     });
 
-    // res.render("venue", { thing: "hello" });
+    if (debug) { console.log(""); }
 });
 
-// Insert
-app.get("/insert", function (req, res) {
-    // var tableService = azure.createTableService();
+// Profile
+app.get("/me", function (req, res) {
+    // Foursquare data
 
-    // tableService.queryEntity("pissers", )
+    // HTP data
+    var tableService = azure.createTableService(storageAccount, storageAccessKey);
+    var query = azure.TableQuery
+        .select()
+        .from("pissers")
+        .where("PartitionKey eq ?", "me");
+    tableService.queryEntities(query, function (error, entities) {
+        if (!error) {
+            console.log(entities);
+            res.render("user", { u: entities });
+        }
+    });
 });
-
-// Callback
-// app.get("/test", routes.test);
 
 
 /*
  * API Routing
- * --------------------------------------------------------------- */
+ *
+ * API wrapper for Hows The Pisser for connecting to Foursquare.
+ */
 // Venues
 app.get("/api/venues", function (req, res) {
-
-    console.log("LAT: " + req.query.lat);
-    console.log("LON: " + req.query.lon);
+    var debug = false;
 
     if (req.query && req.query.lat && req.query.lon) {
         foursquare.Venues.explore(req.query.lat, req.query.lon, { radius: 500 }, req.session.token, function (error, result) {
@@ -149,41 +173,49 @@ app.get("/api/venues", function (req, res) {
         res.set("Content-Type", "application/json");
         res.send({ "error": "lat/lon not provided" });
     }
+
+    if (debug) {
+        console.log("API GET: /api/venues");
+        console.log("latitude : " + req.query.lat);
+        console.log("longitude: " + req.query.lon);
+        console.log("");
+    }
 });
 
 // Venue Details
 app.get("/api/venues/:id", function (req, res) {
+    var debug = false;
     var venueId = req.param("id");
 
     foursquare.Venues.getVenue(venueId, req.session.token, function (error, result) {
-        if (error) {
-            console.log("oops");
-        } else {
+        if (!error) {
             res.set("Content-Type", "application/json");
             res.send(result);
         }
     });
+
+    if (debug) {
+        console.log("API GET: /api/venues/:id");
+        console.log("");
+    }
 });
 
+// Venue herenow
 app.get("/api/venues/:id/herenow", function (req, res) {
+    var debug = false;
     var venueId = req.params.id;
 
-    console.log("here: " + venueId);
-    console.log("type: " + typeof venueId);
-
     foursquare.Venues.getVenueAspect(venueId, "herenow", {}, req.session.token, function (error, result) {
-        // console.log("result: " + result);
-        // console.log("error:  " + error);
         if (!error) {
-            console.log("success");
             res.set("Content-Type", "application/json");
             res.send(result);
-        } else {
-            console.log("error");
-            console.log(error);
         }
-        // res.send(result);
     });
+
+    if (debug) {
+        console.log("API GET: /api/venues/:id/herenow");
+        console.log("");
+    }
 });
 
 // User Details

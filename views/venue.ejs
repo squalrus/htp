@@ -16,6 +16,10 @@
         <li>Open: <%= v.venue.popular.isOpen %></li>
     </ul>
 
+    <form action="/venues/<% v.venue.id %>" method="POST">
+        <input type="submit" value="submit" />
+    </form>
+
     <script src="/js/lib/jquery.min.js"></script>
     <script>
         var prefix  = "<%= v.venue.categories[0].icon.prefix %>";
