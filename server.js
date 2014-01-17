@@ -112,13 +112,16 @@ app.get("/venues/:id", function (req, res) {
 app.post("/venues/:id", function (req, res) {
     var debug = false;
 
-    if (debug) { console.log("POST: /venues/:id"); }
+    if (debug) {
+        console.log("POST: /venues/:id");
+        console.log("rating: " + req.body.rating);
+    }
 
     // Write the rating (move to POST method)
     var entity = {
         PartitionKey: "me",
         RowKey: req.param("id"),
-        Rating: 4
+        Rating: req.body.rating
     };
 
     if (debug) {
@@ -130,6 +133,7 @@ app.post("/venues/:id", function (req, res) {
     tableService.insertOrReplaceEntity("pissers", entity, function (error) {
         if (!error) {
             // Do something
+            res.redirect("/venues/")
         }
     });
 
@@ -137,7 +141,7 @@ app.post("/venues/:id", function (req, res) {
 });
 
 // Profile
-app.get("/me", function (req, res) {
+app.get("/self", function (req, res) {
     // Foursquare data
 
     // HTP data
@@ -187,10 +191,10 @@ app.get("/api/venues/:id", function (req, res) {
     var debug = false;
     var venueId = req.param("id");
 
-    foursquare.Venues.getVenue(venueId, req.session.token, function (error, result) {
+    foursquare.Venues.getVenue(venueId, req.session.token, function (error, data) {
         if (!error) {
             res.set("Content-Type", "application/json");
-            res.send(result);
+            res.send(data);
         }
     });
 
@@ -219,7 +223,30 @@ app.get("/api/venues/:id/herenow", function (req, res) {
 });
 
 // User Details
-// app.get("/api/user/:id", api.user);
+app.get("/api/users/self", function (req, res) {
+    var debug = true;
+
+    if (debug) { console.log("API GET: /api/users/self"); }
+
+    foursquare.Users.getUser("self", req.session.token, function (error, data) {
+        if (!error) {
+            res.set("Content-Type", "application/json");
+            res.send(data);
+
+            if (debug) { console.log("user data: " + data); }
+        } else {
+            console.log(error);
+        }
+    });
+
+    if (debug) { console.log(""); }
+});
+
+// User Details
+app.get("/api/users/:id", function (req, res) {
+    foursquare.Users.getUser("self", accessToken, function (error, data) {
+    });
+});
 
 // Create Server
 http.createServer(app).listen(app.get("port"), function () {

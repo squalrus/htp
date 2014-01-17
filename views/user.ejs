@@ -1,28 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>How's The Pisser</title>
-</head>
-<body>
-    <h1>User</h1>
+<% include includes/header.ejs %>
 
-    <h3>Rated: <%= u.length %></h3>
+<h1>User</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <td>Venue Key</td>
-                <td>Time</td>
-                <td>Rating</td>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<u.length; i++) {%>
-                <tr><td><a href="/venues/<%= u[i].RowKey %>"><%= u[i].RowKey %></a></td><td><%= u[i].Timestamp %></td><td><%= u[i].Rating %></td></tr>
-            <% } %>
-        </tbody>
-    </table>
+<h3>Rated: <%= u.length %></h3>
 
-    <script src="/js/lib/jquery.min.js"></script>
-</body>
-</html>
+<table>
+    <thead>
+        <tr>
+            <td>Venue Key</td>
+            <td>Time</td>
+            <td>Rating</td>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(var i=0; i<u.length; i++) {%>
+            <tr><td><a href="/venues/<%= u[i].RowKey %>"><%= u[i].RowKey %></a></td><td><%= u[i].Timestamp %></td><td><%= u[i].Rating %></td></tr>
+        <% } %>
+    </tbody>
+</table>
+
+<script src="/js/lib/jquery.min.js"></script>
+
+<% include includes/footer.ejs %>

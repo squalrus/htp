@@ -1,48 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>How's The Pisser</title>
-</head>
-<body>
-    <h1>You are in the pisser.</h1>
+<% include includes/header.ejs %>
 
-    <ul id="venue-list">
-    </ul>
+<h1>You are in the pisser.</h1>
 
-    <script src="/js/lib/jquery.min.js"></script>
-    <script>
+<ul id="venue-list">
+</ul>
 
-        navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
+<script src="/js/lib/jquery.min.js"></script>
+<script>
 
-        function updateVenues (data) {
-            var venues = data.groups[0].items,
-                i;
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
 
-            for (i = 0; i < venues.length; i++) {
-                $("#venue-list").append("<li data-id='" + venues[i].venue.id + "'><a href='/venues/" + venues[i].venue.id + "'>" + venues[i].venue.name + "</a> // " + venues[i].venue.location.distance + " meters</li>");
-            }
+    function updateVenues (data) {
+        var venues = data.groups[0].items,
+            i;
 
-            console.log("successful request!!!");
+        for (i = 0; i < venues.length; i++) {
+            $("#venue-list").append("<li data-id='" + venues[i].venue.id + "'><a href='/venues/" + venues[i].venue.id + "'>" + venues[i].venue.name + "</a> // " + venues[i].venue.location.distance + " meters</li>");
         }
 
-        function geoSuccess (position) {
-            console.log("lat: " + position.coords.latitude);
-            console.log("lon: " + position.coords.longitude);
+        console.log("successful request!!!");
+    }
 
-            $.ajax({
-                type: 'GET',
-                url: '/api/venues',
-                data: {
-                    'lat': position.coords.latitude,
-                    'lon': position.coords.longitude
-                },
-                success: updateVenues
-            });
-        }
+    function geoSuccess (position) {
+        console.log("lat: " + position.coords.latitude);
+        console.log("lon: " + position.coords.longitude);
 
-        function geoFailure( err ){
-            console.log( err );
-        }
-    </script>
-</body>
-</html>
+        $.ajax({
+            type: 'GET',
+            url: '/api/venues',
+            data: {
+                'lat': position.coords.latitude,
+                'lon': position.coords.longitude
+            },
+            success: updateVenues
+        });
+    }
+
+    function geoFailure( err ){
+        console.log( err );
+    }
+</script>
+
+<% include includes/footer.ejs %>

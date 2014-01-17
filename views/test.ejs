@@ -1,35 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>How's The Pisser</title>
-</head>
-<body>
-    <h1>How's The Pisser</h1>
+<% include includes/header.ejs %>
 
-    <h2>API</h2>
+<h1>How's The Pisser</h1>
 
-    <p>/api/venue</p>
-    <div id="api-venue"></div>
+<h2>API</h2>
 
-    <p>/api/venue/:id</p>
-    <div id="api-venue-id"></div>
+<p>/api/venue</p>
+<div id="api-venue"></div>
 
-    <p>/api/user/:id</p>
-    <div id="api-user-id"></div>
+<p>/api/venue/:id</p>
+<div id="api-venue-id"></div>
 
-    <script src="js/lib/jquery.min.js"></script>
-    <script>
-        $.get('/api/venue', function( data ){
-            $('#api-venue').html(JSON.stringify(data));
-        });
+<p>/api/user/:id</p>
+<div id="api-user-id"></div>
 
-        $.get('/api/venue/123', function( data ){
-            $('#api-venue-id').html(JSON.stringify(data));
-        });
+<script src="js/lib/jquery.min.js"></script>
+<script>
+    $.get('/api/venue', function( data ){
+        $('#api-venue').html(JSON.stringify(data));
+    });
 
-        $.get('/api/user/123', function( data ){
-            $('#api-user-id').html(JSON.stringify(data));
-        });
-    </script>
-</body>
-</html>
+    $.get('/api/venue/123', function( data ){
+        $('#api-venue-id').html(JSON.stringify(data));
+    });
+
+    $.get('/api/user/123', function( data ){
+        $('#api-user-id').html(JSON.stringify(data));
+    });
+</script>
+
+<% include includes/footer.ejs %>

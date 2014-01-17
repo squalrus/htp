@@ -1,33 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>How's The Pisser</title>
-</head>
-<body>
-    <h1>Venue</h1>
+<% include includes/header.ejs %>
 
-    <ul id="venue">
-        <li><%= v.venue.name %></li>
-        <li><%= v.venue.location.address %></li>
-        <li><%= v.venue.location.city %></li>
-        <li><%= v.venue.location.state %></li>
-        <li><img src="" class="image" /></li>
-        <li>Here Now: <%= v.venue.hereNow.count %></li>
-        <li>Open: <%= v.venue.popular.isOpen %></li>
-    </ul>
+<h1>Venue</h1>
 
-    <form action="/venues/<% v.venue.id %>" method="POST">
-        <input type="submit" value="submit" />
-    </form>
+<ul id="venue">
+    <li><%= v.venue.name %></li>
+    <li><%= v.venue.location.address %></li>
+    <li><%= v.venue.location.city %></li>
+    <li><%= v.venue.location.state %></li>
+    <li><img src="" class="image" /></li>
+    <li>Here Now: <%= v.venue.hereNow.count %></li>
+    <li>Open: <%= v.venue.popular.isOpen %></li>
+</ul>
 
-    <script src="/js/lib/jquery.min.js"></script>
-    <script>
-        var prefix  = "<%= v.venue.categories[0].icon.prefix %>";
-        var suffix  = "<%= v.venue.categories[0].icon.suffix %>";
-        var fullUrl = prefix.slice(0, prefix.length - 1) + suffix;
+<form action="/venues/<%= v.venue.id %>" method="POST">
+    <input type="text" name="rating" />
+    <input type="submit" value="submit" />
+</form>
+
+<script src="/js/lib/jquery.min.js"></script>
+<script>
+    var prefix  = "<%= v.venue.categories[0].icon.prefix %>";
+    var suffix  = "<%= v.venue.categories[0].icon.suffix %>";
+    var fullUrl = prefix.slice(0, prefix.length - 1) + suffix;
 
 
-        $(".image").attr("src", fullUrl);
-    </script>
-</body>
-</html>
+    $(".image").attr("src", fullUrl);
+</script>
+
+<% include includes/footer.ejs %>
